@@ -1,5 +1,6 @@
 package com.parkking491prototype.parkking;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -13,12 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 
-//import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    private Button getImage;
+    protected PinchZoomPan pinchZoomPan;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,12 +48,41 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        StatusDrawableView cdv = new StatusDrawableView(this);
-        cdv.setId(R.id.statusDrawableView);
+        //V1 WITHOUT PinchZoomPan
+//        StatusDrawableView cdv = new StatusDrawableView(this);
+//        cdv.setId(R.id.statusDrawableView);
 //        cdv.setOnTouchListener(new ImageMatrixTouchHandler(this));
-        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.contentLayout);
-        layout.addView(cdv);
+//        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.contentLayout);
+//        layout.addView(cdv);
+//
+//
+//
+//        Thread thread = new Thread() {
+//
+//            @Override
+//            public void run() {
+//                try {
+//                    while (!this.isInterrupted()) {
+//                        Thread.sleep(2000);
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                findViewById(R.id.statusDrawableView).invalidate();
+//                                System.out.println("Refreshed!");
+//                            }
+//                        });
+//                    }
+//                } catch (InterruptedException e) {
+//                }
+//            }
+//        };
+//
+//        thread.start();
+
+        //V2 WITH PINCHZOOMPAN
+        getImage = (Button) findViewById(R.id.btGetImage);
+        pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
+        pinchZoomPan.loadImageOnCanvas();
 
 
 
@@ -58,11 +92,14 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 try {
                     while (!this.isInterrupted()) {
-                        Thread.sleep(2000);
+                        Thread.sleep(100);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                findViewById(R.id.statusDrawableView).invalidate();
+                                pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
+                                pinchZoomPan.updateStatus();
+                                pinchZoomPan.invalidate();
+
                                 System.out.println("Refreshed!");
                             }
                         });
@@ -73,6 +110,7 @@ public class MainActivity extends AppCompatActivity
         };
 
         thread.start();
+
     }
 
     @Override

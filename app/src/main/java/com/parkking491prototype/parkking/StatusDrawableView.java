@@ -20,8 +20,8 @@ public class StatusDrawableView extends View {
     public StatusDrawableView(Context context) {
         super(context);
 
-        int imageX = 40;
-        int imageY = 40;
+        int imageX = 0;
+        int imageY = 0;
         int imageWidth = 1000;
         int imageHeight = 1300;
 
@@ -55,7 +55,7 @@ public class StatusDrawableView extends View {
 
         Resources res = context.getResources();
         parkingLotImageDrawable = ResourcesCompat.getDrawable(res, R.drawable.pakringlotlayout, null);
-        parkingLotImageDrawable.setBounds(0, 0, imageX + imageWidth, imageY + imageHeight);
+        parkingLotImageDrawable.setBounds(imageX, imageY, imageX + this.getWidth(), imageY + this.getWidth());
 
         paint = new Paint();
     }
