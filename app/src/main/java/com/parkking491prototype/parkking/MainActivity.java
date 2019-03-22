@@ -15,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.TextView;
 
+import org.w3c.dom.Text;
 
 
 public class MainActivity extends AppCompatActivity
@@ -48,58 +50,27 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //V1 WITHOUT PinchZoomPan
-//        StatusDrawableView cdv = new StatusDrawableView(this);
-//        cdv.setId(R.id.statusDrawableView);
-//        cdv.setOnTouchListener(new ImageMatrixTouchHandler(this));
-//        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.contentLayout);
-//        layout.addView(cdv);
-//
-//
-//
-//        Thread thread = new Thread() {
-//
-//            @Override
-//            public void run() {
-//                try {
-//                    while (!this.isInterrupted()) {
-//                        Thread.sleep(2000);
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                findViewById(R.id.statusDrawableView).invalidate();
-//                                System.out.println("Refreshed!");
-//                            }
-//                        });
-//                    }
-//                } catch (InterruptedException e) {
-//                }
-//            }
-//        };
-//
-//        thread.start();
 
-        //V2 WITH PINCHZOOMPAN
-        getImage = (Button) findViewById(R.id.btGetImage);
+        final ParkingStatus parkingStatus = new ParkingStatus();
         pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
+        pinchZoomPan.setParkingStatus(parkingStatus);
         pinchZoomPan.loadImageOnCanvas();
-
-
-
         Thread thread = new Thread() {
-
             @Override
             public void run() {
                 try {
                     while (!this.isInterrupted()) {
-                        Thread.sleep(100);
+                        Thread.sleep(5000);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
-                                pinchZoomPan.updateStatus();
+                                parkingStatus.updateStatus();
                                 pinchZoomPan.invalidate();
 
+                                TextView parkingStatusTextView = (TextView) findViewById(R.id.parkingStatusTextView);
+                                parkingStatusTextView.setText("Open Spots:" + parkingStatus.getNumOfOpenSpots());
+                                parkingStatusTextView.invalidate();
                                 System.out.println("Refreshed!");
                             }
                         });

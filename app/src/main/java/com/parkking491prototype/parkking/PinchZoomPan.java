@@ -13,9 +13,11 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 
 public class PinchZoomPan extends View {
@@ -37,38 +39,16 @@ public class PinchZoomPan extends View {
     private final static float mMinZoom = 1.0f;
     private final static float mMaxZoom = 5.0f;
 
-    private ArrayList<StatusDot> statusDotList;
     private Paint paint;
+
+    private ParkingStatus parkingStatus;
 
     public PinchZoomPan(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 
-        //create dotss
-        // If the color isn't set, the shape uses black as the default.
-        // If the bounds aren't set, the shape can't be drawn.
-        statusDotList= new ArrayList<StatusDot>();
-        for(int i = 1; i<21; i++){
-            StatusDot sd;
-            if (i<6) {
-                sd = new StatusDot(250, 100 + i * 140 );
-                statusDotList.add(sd);
-            }else if (i>=6 && i<11){
-                sd = new StatusDot(380, 100 + (i-5) * 140 );
-                statusDotList.add(sd);
-            }else if (i>=11 && i<16){
-                sd = new StatusDot(650, 100 + (i-10) * 140 );
-                statusDotList.add(sd);
-            }else{
-                sd = new StatusDot(780, 100 + (i-15) * 140 );
-                statusDotList.add(sd);
-            }
-            int min = 0;
-            int max = 1;
-            sd.setStatus((min + (int)(Math.random() * ((max - min) + 1)))==1);
 
-        }
 
         //dot paint color
         paint = new Paint();
@@ -184,18 +164,22 @@ public class PinchZoomPan extends View {
             canvas.scale(mScaleFactor, mScaleFactor);
             canvas.drawBitmap(mBitmap, 0, 0, null);
             //draw dots
-            for(int i = 0; i<statusDotList.size(); i++){
-//                statusDotList.get(i).setStatus((0 + (int)(Math.random() * ((1 - 0) + 1)))==1);
-                int x = statusDotList.get(i).getX();
-                int y = statusDotList.get(i).getY();
-                boolean status = statusDotList.get(i).getStatus();
 
-                if(status){
-                    paint.setARGB(255, 0, 255, 0);
-                }else{
-                    paint.setARGB(255, 255, 0, 0);
+            if(parkingStatus!=null) {
+                ArrayList<StatusDot> statusDotList = parkingStatus.getStatusDotList();
+                for (int i = 0; i < statusDotList.size(); i++) {
+//                statusDotList.get(i).setStatus((0 + (int)(Math.random() * ((1 - 0) + 1)))==1);
+                    int x = statusDotList.get(i).getX();
+                    int y = statusDotList.get(i).getY();
+                    boolean status = statusDotList.get(i).getStatus();
+
+                    if (status) {
+                        paint.setARGB(255, 0, 255, 0);
+                    } else {
+                        paint.setARGB(255, 255, 0, 0);
+                    }
+                    canvas.drawCircle(x, y, 50, paint);
                 }
-                canvas.drawCircle(x, y, 50, paint);
             }
             //end draw dots
             canvas.restore();
@@ -223,11 +207,10 @@ public class PinchZoomPan extends View {
 
     }
 
-    public void updateStatus(){
-        for(int i = 0; i<statusDotList.size(); i++){
-                statusDotList.get(i).setStatus((0 + (int)(Math.random() * ((1 - 0) + 1)))==1);
-        }
+    public void setParkingStatus(ParkingStatus parkingStatus){
+        this.parkingStatus =parkingStatus;
     }
+
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
