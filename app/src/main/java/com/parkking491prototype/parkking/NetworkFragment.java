@@ -9,14 +9,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
+//import javax.net.ssl.HttpsURLConnection;
+
 
 /**
  * Implementation of headless Fragment that runs an AsyncTask to fetch data from the network.
@@ -47,6 +52,9 @@ public class NetworkFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         urlString = getArguments().getString(URL_KEY);
+
+        // TODO: WILL PROBABLY NEED THIS
+        //setRetainInstance(true);
 
     }
 
@@ -148,6 +156,7 @@ public class NetworkFragment extends Fragment {
                 String urlString = urls[0];
                 try {
                     URL url = new URL(urlString);
+                    System.out.println(url.toString());
                     String resultString = downloadUrl(url);
                     if (resultString != null) {
                         result = new Result(resultString);
@@ -167,9 +176,12 @@ public class NetworkFragment extends Fragment {
         @Override
         protected void onPostExecute(Result result) {
             if (result != null && mCallback != null) {
+                //System.out.println(result.mResultValue);
+                //System.out.println(result.mException.getMessage());
                 if (result.mException != null) {
                     mCallback.updateFromDownload(result.mException.getMessage());
-                } else if (result.mResultValue != null) {
+                }
+                if (result.mResultValue != null) {
                     mCallback.updateFromDownload(result.mResultValue);
                 }
                 mCallback.finishDownloading();
@@ -181,6 +193,7 @@ public class NetworkFragment extends Fragment {
          */
         @Override
         protected void onCancelled(Result result) {
+            System.out.println("CANCELLED");
         }
 
         /**
@@ -190,35 +203,41 @@ public class NetworkFragment extends Fragment {
          */
         private String downloadUrl(URL url) throws IOException {
             InputStream stream = null;
-            HttpsURLConnection connection = null;
+            HttpURLConnection connection = null;
             String result = null;
             try {
-                connection = (HttpsURLConnection) url.openConnection();
+                connection = (HttpURLConnection) url.openConnection();
                 // Timeout for reading InputStream arbitrarily set to 3000ms.
                 connection.setReadTimeout(3000);
                 // Timeout for connection.connect() arbitrarily set to 3000ms.
                 connection.setConnectTimeout(3000);
                 // For this use case, set HTTP method to GET.
                 connection.setRequestMethod("GET");
+                //connection.setRequestProperty("parkinglot_ID", "491");
+
+
                 // Already true by default but setting just in case; needs to be true since this request
                 // is carrying an input (response) body.
                 connection.setDoInput(true);
+                //connection.setDoOutput(true);
                 // Open communications link (network traffic occurs here).
                 connection.connect();
                 publishProgress(DownloadCallback.Progress.CONNECT_SUCCESS);
                 int responseCode = connection.getResponseCode();
-                if (responseCode != HttpsURLConnection.HTTP_OK) {
+                if (responseCode != HttpURLConnection.HTTP_ACCEPTED) {
                     throw new IOException("HTTP error code: " + responseCode);
                 }
                 // Retrieve the response body as an InputStream.
+                int contentLength = connection.getContentLength();
                 stream = connection.getInputStream();
                 publishProgress(DownloadCallback.Progress.GET_INPUT_STREAM_SUCCESS, 0);
                 if (stream != null) {
                     // Converts Stream to String with max length of 500.
-                    result = readStream(stream, 500);
+                    result = readStream(stream, contentLength);
+                    System.out.println(result);
                 }
             } finally {
-                // Close Stream and disconnect HTTPS connection.
+                // Close Stream and disconnect HTTP connection.
                 if (stream != null) {
                     stream.close();
                 }
@@ -235,7 +254,7 @@ public class NetworkFragment extends Fragment {
         public String readStream(InputStream stream, int maxReadSize)
                 throws IOException, UnsupportedEncodingException {
             Reader reader = null;
-            reader = new InputStreamReader(stream, "UTF-8");
+            reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
             char[] rawBuffer = new char[maxReadSize];
             int readSize;
             StringBuffer buffer = new StringBuffer();
@@ -246,6 +265,8 @@ public class NetworkFragment extends Fragment {
                 buffer.append(rawBuffer, 0, readSize);
                 maxReadSize -= readSize;
             }
+            System.out.println("\n BUFFFER:");
+            System.out.println(buffer.toString());
             return buffer.toString();
         }
     }

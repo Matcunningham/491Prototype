@@ -81,4 +81,13 @@ public class StatusDrawableView extends View {
     }
 
 
+    public void setParkingLotImageDrawable(Drawable d)
+    {
+        int imageX = 40;
+        int imageY = 40;
+        int imageWidth = 1000;
+        int imageHeight = 1300;
+        parkingLotImageDrawable = d;
+        parkingLotImageDrawable.setBounds(0, 0, imageX + imageWidth, imageY + imageHeight);
+    }
 }

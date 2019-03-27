@@ -22,4 +22,9 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_dashboard_drawer" />
 
+    <ImageView
+        android:id="@+id/mapFromServer"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
 </android.support.v4.widget.DrawerLayout>
