@@ -25,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-<<<<<<< HEAD
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -139,6 +138,11 @@ public class MainActivity extends AppCompatActivity
             String data = jObject.getString("data");
             System.out.println("data: " + data);
             Drawable d = decodeToImage(data);
+
+            //TODO: Left off here
+            //pinchZoomPan.setParkingStatus(parkingStatus);
+            //pinchZoomPan.loadImageOnCanvas();
+
             cdv = new StatusDrawableView(this);
             cdv.setParkingLotImageDrawable(d);
             cdv.setId(R.id.statusDrawableView);
