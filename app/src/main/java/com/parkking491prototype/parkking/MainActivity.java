@@ -1,10 +1,14 @@
 package com.parkking491prototype.parkking;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+<<<<<<< HEAD
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,7 +36,12 @@ import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-//import com.bogdwellers.pinchtozoom.ImageMatrixTouchHandler;
+import android.widget.Button;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DownloadCallback<String> {
@@ -43,6 +53,9 @@ public class MainActivity extends AppCompatActivity
 
     private StatusDrawableView cdv;
 
+
+    private Button getImage;
+    protected PinchZoomPan pinchZoomPan;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,24 +83,31 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        cdv = new StatusDrawableView(this);
-        cdv.setId(R.id.statusDrawableView);
-//        cdv.setOnTouchListener(new ImageMatrixTouchHandler(this));
-        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.contentLayout);
-        layout.addView(cdv);
 
+
+
+
+        final ParkingStatus parkingStatus = new ParkingStatus();
+        pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
+        pinchZoomPan.setParkingStatus(parkingStatus);
+        pinchZoomPan.loadImageOnCanvas();
 
         Thread thread = new Thread() {
-
             @Override
             public void run() {
                 try {
                     while (!this.isInterrupted()) {
-                        Thread.sleep(2000);
+                        Thread.sleep(5000);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                findViewById(R.id.statusDrawableView).invalidate();
+                                pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
+                                parkingStatus.updateStatus();
+                                pinchZoomPan.invalidate();
+
+                                TextView parkingStatusTextView = (TextView) findViewById(R.id.parkingStatusTextView);
+                                parkingStatusTextView.setText("Open Spots:" + parkingStatus.getNumOfOpenSpots());
+                                parkingStatusTextView.invalidate();
                                 System.out.println("Refreshed!");
                             }
                         });
@@ -98,6 +118,7 @@ public class MainActivity extends AppCompatActivity
         };
 
         thread.start();
+
     }
 
 
