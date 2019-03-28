@@ -3,6 +3,8 @@ package com.parkking491prototype.parkking;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -50,8 +52,6 @@ public class MainActivity extends AppCompatActivity
     private NetworkFragment netFrag;
     private boolean downloading = false;
 
-    private StatusDrawableView cdv;
-
 
     private Button getImage;
     protected PinchZoomPan pinchZoomPan;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         final ParkingStatus parkingStatus = new ParkingStatus();
         pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
         pinchZoomPan.setParkingStatus(parkingStatus);
-        pinchZoomPan.loadImageOnCanvas();
+        pinchZoomPan.loadImageOnCanvas(null);
 
         Thread thread = new Thread() {
             @Override
@@ -137,18 +137,9 @@ public class MainActivity extends AppCompatActivity
             JSONObject jObject = jArray.getJSONObject(0);
             String data = jObject.getString("data");
             System.out.println("data: " + data);
-            Drawable d = decodeToImage(data);
+            Bitmap b = decodeToImage(data);
 
-            //TODO: Left off here
-            //pinchZoomPan.setParkingStatus(parkingStatus);
-            //pinchZoomPan.loadImageOnCanvas();
-
-            cdv = new StatusDrawableView(this);
-            cdv.setParkingLotImageDrawable(d);
-            cdv.setId(R.id.statusDrawableView);
-            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.contentLayout);
-            layout.addView(cdv);
-
+            pinchZoomPan.loadImageOnCanvas(b);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -240,14 +231,14 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public static Drawable decodeToImage(String imageString) {
+    public static Bitmap decodeToImage(String imageString) {
 
-        Drawable image = null;
+        Bitmap image = null;
         byte[] imageByte;
         try {
             imageByte = Base64.decode(imageString, Base64.DEFAULT);
             InputStream bis = new ByteArrayInputStream(imageByte);
-            image = Drawable.createFromStream(bis, "MapOverlay");
+            image = BitmapFactory.decodeStream(bis);
             bis.close();
         } catch (Exception e) {
             e.printStackTrace();

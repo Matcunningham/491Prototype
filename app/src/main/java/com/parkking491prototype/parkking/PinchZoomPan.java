@@ -188,13 +188,19 @@ public class PinchZoomPan extends View {
         }
     }
 
-    public void loadImageOnCanvas() {
+    public void loadImageOnCanvas(Bitmap myBitmap) {
 
         Bitmap bitmap = null;
 
 
 //            bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pakringlotlayout);
+        if(myBitmap == null) {
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pakringlotlayout);
+        }
+        else
+        {
+            bitmap = myBitmap;
+        }
 
 
         float aspectRatio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
