@@ -42,19 +42,27 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import static com.parkking491prototype.parkking.QueryType.OVERLAYCOORDS;
+import static com.parkking491prototype.parkking.QueryType.OVERLAYMAP;
+import static com.parkking491prototype.parkking.QueryType.STATUS;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DownloadCallback<String> {
-    private static final String BASE_URL = "http://54.186.186.248:3000/";
-    private static final String OVERLAY_URL = BASE_URL + "api/overlayimage?";
 
-    private NetworkFragment netFrag;
+    private static final String BASE_URL = "http://54.186.186.248:3000/";
+    private static final String OVERLAY_URL = BASE_URL + "api/overlayimage?parkinglot_ID=";
+    private static final String OVERLAY_COORDS_URL = BASE_URL + "api/overlaycoordinates?parkinglot_ID=";
+    private static final String STATUS_URL = BASE_URL + "api/status?parkinglot_ID=";
+
+
+   private NetworkFragment netFrag = null;
     private boolean downloading = false;
 
 
     private Button getImage;
     protected PinchZoomPan pinchZoomPan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +70,24 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        netFrag = NetworkFragment.getInstance(getFragmentManager(), OVERLAY_URL + "parkinglot_ID=491");
-
+        netFrag = NetworkFragment.getInstance(getFragmentManager());
+        //NetworkFragment netFrag = null;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                netFrag.setUrlStringAndQueryType(OVERLAYMAP ,OVERLAY_URL + "491");
+                startDownload();
+            }
+        });
+
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                netFrag.setUrlStringAndQueryType(STATUS, STATUS_URL + "491");
+                //netFrag.setUrlStringAndQueryType(OVERLAYCOORDS,OVERLAY_COORDS_URL + "491");
                 startDownload();
             }
         });
@@ -123,6 +142,7 @@ public class MainActivity extends AppCompatActivity
 
     private void startDownload() {
         if (!downloading && netFrag != null) {
+
             // Execute the async download.
             netFrag.startDownload();
             downloading = true;
@@ -131,15 +151,35 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void updateFromDownload(String result) {
+        // For testing purposes
         Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         try {
-            JSONArray jArray = new JSONArray(result);
-            JSONObject jObject = jArray.getJSONObject(0);
-            String data = jObject.getString("data");
-            System.out.println("data: " + data);
-            Bitmap b = decodeToImage(data);
+//            JSONArray jArray = new JSONArray(result);
+//            JSONObject jObject = jArray.getJSONObject(0);
+//            String data = jObject.getString("data");
+//            System.out.println("data: " + data);
 
-            pinchZoomPan.loadImageOnCanvas(b);
+            switch (netFrag.getQueryType()) {
+                case OVERLAYMAP:
+                    JSONArray jArray = new JSONArray(result);
+                    JSONObject jObject = jArray.getJSONObject(0);
+                    String data = jObject.getString("data");
+                    System.out.println("data: " + data);
+
+                    Bitmap b = decodeToImage(data);
+                    pinchZoomPan.loadImageOnCanvas(b);
+                    break;
+
+                case STATUS:
+                    // TODO: integrate data with dots
+                    break;
+
+                case OVERLAYCOORDS:
+                    //TODO: ?
+                    break;
+
+            }
+
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -35,26 +35,41 @@ public class NetworkFragment extends Fragment {
     private DownloadTask downloadTask;
     private String urlString;
 
+    private QueryType queryType;
+
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
      * from.
      */
-    public static NetworkFragment getInstance(FragmentManager fragmentManager, String url) {
+    public static NetworkFragment getInstance(FragmentManager fragmentManager) {
         NetworkFragment networkFragment = new NetworkFragment();
-        Bundle args = new Bundle();
-        args.putString(URL_KEY, url);
-        networkFragment.setArguments(args);
+        //networkFragment.urlString = url;
+        //Bundle args = new Bundle();
+        //args.putString(URL_KEY, url);
+        //networkFragment.setArguments(args);
         fragmentManager.beginTransaction().add(networkFragment, TAG).commit();
         return networkFragment;
+    }
+
+
+    public void setUrlStringAndQueryType(QueryType qtype, String url)
+    {
+        urlString = url;
+        queryType = qtype;
+    }
+
+    public QueryType getQueryType()
+    {
+        return queryType;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        urlString = getArguments().getString(URL_KEY);
+        //urlString = getArguments().getString(URL_KEY);
 
-        // TODO: WILL PROBABLY NEED THIS
-        //setRetainInstance(true);
+
+        setRetainInstance(true);
 
     }
 
@@ -156,7 +171,6 @@ public class NetworkFragment extends Fragment {
                 String urlString = urls[0];
                 try {
                     URL url = new URL(urlString);
-                    System.out.println(url.toString());
                     String resultString = downloadUrl(url);
                     if (resultString != null) {
                         result = new Result(resultString);
@@ -176,8 +190,6 @@ public class NetworkFragment extends Fragment {
         @Override
         protected void onPostExecute(Result result) {
             if (result != null && mCallback != null) {
-                //System.out.println(result.mResultValue);
-                //System.out.println(result.mException.getMessage());
                 if (result.mException != null) {
                     mCallback.updateFromDownload(result.mException.getMessage());
                 }
@@ -234,7 +246,7 @@ public class NetworkFragment extends Fragment {
                 if (stream != null) {
                     // Converts Stream to String with max length of 500.
                     result = readStream(stream, contentLength);
-                    System.out.println(result);
+                    System.out.println("RESULT:" + result);
                 }
             } finally {
                 // Close Stream and disconnect HTTP connection.
@@ -265,8 +277,6 @@ public class NetworkFragment extends Fragment {
                 buffer.append(rawBuffer, 0, readSize);
                 maxReadSize -= readSize;
             }
-            System.out.println("\n BUFFFER:");
-            System.out.println(buffer.toString());
             return buffer.toString();
         }
     }
