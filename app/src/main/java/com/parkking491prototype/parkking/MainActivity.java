@@ -56,12 +56,17 @@ public class MainActivity extends AppCompatActivity
     private static final String STATUS_URL = BASE_URL + "api/status?parkinglot_ID=";
 
 
+    //test purposes
+    private static final String TEST_CAMERA_NAME = "testCamera7";
+
+
    private NetworkFragment netFrag = null;
     private boolean downloading = false;
 
 
     private Button getImage;
     protected PinchZoomPan pinchZoomPan;
+    private final ParkingStatus parkingStatus = new ParkingStatus();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                netFrag.setUrlStringAndQueryType(STATUS, STATUS_URL + "491");
+                netFrag.setUrlStringAndQueryType(STATUS, STATUS_URL + TEST_CAMERA_NAME);
                 //netFrag.setUrlStringAndQueryType(OVERLAYCOORDS,OVERLAY_COORDS_URL + "491");
                 startDownload();
             }
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        final ParkingStatus parkingStatus = new ParkingStatus();
+
         pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
         pinchZoomPan.setParkingStatus(parkingStatus);
         pinchZoomPan.loadImageOnCanvas(null);
@@ -119,14 +124,17 @@ public class MainActivity extends AppCompatActivity
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                netFrag.setUrlStringAndQueryType(STATUS, STATUS_URL + TEST_CAMERA_NAME);
+//                                startDownload();
+
                                 pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
-                                parkingStatus.updateStatus();
+//                                parkingStatus.updateStatus();
                                 pinchZoomPan.invalidate();
 
                                 TextView parkingStatusTextView = (TextView) findViewById(R.id.parkingStatusTextView);
                                 parkingStatusTextView.setText("Open Spots:" + parkingStatus.getNumOfOpenSpots());
                                 parkingStatusTextView.invalidate();
-                                System.out.println("Refreshed!");
+//                                System.out.println("Refreshed!");
                             }
                         });
                     }
@@ -169,15 +177,26 @@ public class MainActivity extends AppCompatActivity
                     Bitmap b = decodeToImage(data);
                     pinchZoomPan.loadImageOnCanvas(b);
                     break;
-
                 case STATUS:
                     // TODO: integrate data with dots
+                    JSONArray jArray1 = new JSONArray(result);
+                    JSONObject jObject1 = jArray1.getJSONObject(0);
+                    String statusString = jObject1.getString("status");
+//                    JSONArray statusObject = jObject1.getJSONArray("status");
+                    JSONArray statusArray = new JSONArray(statusString);
+
+//                    System.out.println("TEST: " + statusString);
+//                    final int STATUS_INDEX= 2;
+//                    JSONArray statusArray = jArray1.getJSONArray(STATUS_INDEX);
+                    parkingStatus.updateStatus(statusArray);
+//                    System.out.println(statusArray.getJSONObject(0).getString("confidence"));
+
+
                     break;
 
                 case OVERLAYCOORDS:
                     //TODO: ?
                     break;
-
             }
 
 

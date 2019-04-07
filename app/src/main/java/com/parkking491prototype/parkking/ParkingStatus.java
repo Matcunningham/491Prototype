@@ -1,5 +1,9 @@
 package com.parkking491prototype.parkking;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class ParkingStatus {
@@ -11,7 +15,7 @@ public class ParkingStatus {
     }
 
     private void setTestDotCoords(){
-        for(int i = 1; i<21; i++){
+        for(int i = 1; i<8; i++){
             StatusDot sd;
             if (i<6) {
                 sd = new StatusDot(250, 100 + i * 140 );
@@ -28,7 +32,8 @@ public class ParkingStatus {
             }
             int min = 0;
             int max = 1;
-            sd.setStatus((min + (int)(Math.random() * ((max - min) + 1)))==1);
+//            sd.setStatus((min + (int)(Math.random() * ((max - min) + 1)))==1);
+            sd.setStatus(false);
         }
     }
 
@@ -37,14 +42,36 @@ public class ParkingStatus {
     }
 
 
-    public void updateStatus(){
+//      //TEST FUNCTION
+//    public void updateStatus(){
+//        numOfOpenSpots = 0;
+//        for(int i = 0; i<statusDotList.size(); i++){
+//            statusDotList.get(i).setStatus((0 + (int)(Math.random() * ((1 - 0) + 1)))==1);
+//            if (statusDotList.get(i).getStatus()==true){
+//                numOfOpenSpots++;
+//            }
+//        }
+//
+//    }
+
+    public void updateStatus(JSONArray statusArray){
         numOfOpenSpots = 0;
-        for(int i = 0; i<statusDotList.size(); i++){
-            statusDotList.get(i).setStatus((0 + (int)(Math.random() * ((1 - 0) + 1)))==1);
-            if (statusDotList.get(i).getStatus()==true){
-                numOfOpenSpots++;
+        final int TEST_LIMIT = 7;
+
+        try {
+            for (int i = 0; i < TEST_LIMIT; i++) {
+                Double confidence = statusArray.getJSONObject(i).getDouble("confidence");
+                System.out.println(confidence);
+                statusDotList.get(i).setStatus(confidence>0.5);
+                if (statusDotList.get(i).getStatus() == true) {
+                    numOfOpenSpots++;
+                }
             }
+        } catch (
+        JSONException e) {
+            e.printStackTrace();
         }
+
 
     }
 
