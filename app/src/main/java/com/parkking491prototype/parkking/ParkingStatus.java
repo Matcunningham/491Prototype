@@ -1,10 +1,18 @@
 package com.parkking491prototype.parkking;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static com.parkking491prototype.parkking.QueryType.*;
 
 public class ParkingStatus {
     private ArrayList<StatusDot> statusDotList;
@@ -78,9 +86,6 @@ public class ParkingStatus {
     public int getNumOfOpenSpots(){
         return numOfOpenSpots;
     }
-
-
-
 
 }
 

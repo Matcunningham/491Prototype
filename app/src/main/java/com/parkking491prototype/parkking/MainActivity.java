@@ -1,6 +1,7 @@
 package com.parkking491prototype.parkking;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -42,9 +43,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
-import static com.parkking491prototype.parkking.QueryType.OVERLAYCOORDS;
-import static com.parkking491prototype.parkking.QueryType.OVERLAYMAP;
-import static com.parkking491prototype.parkking.QueryType.STATUS;
+import static com.parkking491prototype.parkking.QueryType.*;
 
 
 public class MainActivity extends AppCompatActivity
@@ -54,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private static final String OVERLAY_URL = BASE_URL + "api/overlayimage?parkinglot_ID=";
     private static final String OVERLAY_COORDS_URL = BASE_URL + "api/overlaycoordinates?parkinglot_ID=";
     private static final String STATUS_URL = BASE_URL + "api/status?parkinglot_ID=";
+    private Activity context;
 
 
     //test purposes
@@ -61,7 +61,9 @@ public class MainActivity extends AppCompatActivity
 
 
    private NetworkFragment netFrag = null;
+   private NetworkFragment netFragStatus = null;
     private boolean downloading = false;
+    private boolean downloadingStatus = false;
 
 
     private Button getImage;
@@ -74,8 +76,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        context = this;
 
-        netFrag = NetworkFragment.getInstance(getFragmentManager());
+        netFragStatus = NetworkFragment.getInstance(getFragmentManager(), "StatusTag");
+        netFrag = NetworkFragment.getInstance(getFragmentManager(), "MainFragment");
         //NetworkFragment netFrag = null;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -124,8 +128,9 @@ public class MainActivity extends AppCompatActivity
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                netFrag.setUrlStringAndQueryType(STATUS, STATUS_URL + TEST_CAMERA_NAME);
-//                                startDownload();
+                                netFragStatus.setUrlStringAndQueryType(STATUS, STATUS_URL + TEST_CAMERA_NAME);
+                                //startDownload();
+                                startFragDownload();
 
                                 pinchZoomPan = (PinchZoomPan) findViewById(R.id.ivImage);
 //                                parkingStatus.updateStatus();
@@ -157,27 +162,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void startFragDownload()
+    {
+        if(!downloadingStatus && netFragStatus != null)
+        {
+            netFragStatus.startDownload();
+            downloadingStatus = true;
+        }
+    }
+
     @Override
-    public void updateFromDownload(String result) {
+    public void updateFromDownload(QueryType qType, String result) {
         // For testing purposes
-        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         try {
 //            JSONArray jArray = new JSONArray(result);
 //            JSONObject jObject = jArray.getJSONObject(0);
 //            String data = jObject.getString("data");
 //            System.out.println("data: " + data);
 
-            switch (netFrag.getQueryType()) {
-                case OVERLAYMAP:
-                    JSONArray jArray = new JSONArray(result);
-                    JSONObject jObject = jArray.getJSONObject(0);
-                    String data = jObject.getString("data");
-                    System.out.println("data: " + data);
-
-                    Bitmap b = decodeToImage(data);
-                    pinchZoomPan.loadImageOnCanvas(b);
-                    break;
-                case STATUS:
+            if(qType != null && result != null) {
+                if (qType == STATUS) {
                     // TODO: integrate data with dots
                     JSONArray jArray1 = new JSONArray(result);
                     JSONObject jObject1 = jArray1.getJSONObject(0);
@@ -190,13 +195,24 @@ public class MainActivity extends AppCompatActivity
 //                    JSONArray statusArray = jArray1.getJSONArray(STATUS_INDEX);
                     parkingStatus.updateStatus(statusArray);
 //                    System.out.println(statusArray.getJSONObject(0).getString("confidence"));
+                } else {
+                    switch (qType) {
+                        case OVERLAYMAP:
+                            JSONArray jArray = new JSONArray(result);
+                            JSONObject jObject = jArray.getJSONObject(0);
+                            String data = jObject.getString("data");
+                            System.out.println("data: " + data);
 
+                            Bitmap b = decodeToImage(data);
+                            pinchZoomPan.loadImageOnCanvas(b);
+                            break;
 
-                    break;
+                        case OVERLAYCOORDS:
+                            //TODO: ?
+                            break;
+                    }
 
-                case OVERLAYCOORDS:
-                    //TODO: ?
-                    break;
+                }
             }
 
 
@@ -231,10 +247,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void finishDownloading() {
-        downloading = false;
-        if (netFrag != null) {
-            netFrag.cancelDownload();
+    public void finishDownloading(QueryType qtype) {
+
+        if(qtype == STATUS)
+        {
+            downloadingStatus = false;
+            if(netFragStatus != null)
+            {
+                netFragStatus.cancelDownload();
+            }
+        }
+        else {
+            downloading = false;
+            if (netFrag != null) {
+                netFrag.cancelDownload();
+            }
         }
     }
 

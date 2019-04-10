@@ -27,7 +27,7 @@ import java.net.URL;
  * Implementation of headless Fragment that runs an AsyncTask to fetch data from the network.
  */
 public class NetworkFragment extends Fragment {
-    public static final String TAG = "NetworkFragment";
+    public static String TAG = "NetworkFragment";
 
     private static final String URL_KEY = "UrlKey";
 
@@ -41,7 +41,8 @@ public class NetworkFragment extends Fragment {
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
      * from.
      */
-    public static NetworkFragment getInstance(FragmentManager fragmentManager) {
+    public static NetworkFragment getInstance(FragmentManager fragmentManager, String tag) {
+        TAG = tag;
         NetworkFragment networkFragment = new NetworkFragment();
         //networkFragment.urlString = url;
         //Bundle args = new Bundle();
@@ -155,7 +156,7 @@ public class NetworkFragment extends Fragment {
                         (networkInfo.getType() != ConnectivityManager.TYPE_WIFI
                                 && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE)) {
                     // If no connectivity, cancel task and update Callback with null data.
-                    mCallback.updateFromDownload(null);
+                    mCallback.updateFromDownload(null, null);
                     cancel(true);
                 }
             }
@@ -191,12 +192,12 @@ public class NetworkFragment extends Fragment {
         protected void onPostExecute(Result result) {
             if (result != null && mCallback != null) {
                 if (result.mException != null) {
-                    mCallback.updateFromDownload(result.mException.getMessage());
+                    mCallback.updateFromDownload(queryType ,result.mException.getMessage());
                 }
                 if (result.mResultValue != null) {
-                    mCallback.updateFromDownload(result.mResultValue);
+                    mCallback.updateFromDownload(queryType ,result.mResultValue);
                 }
-                mCallback.finishDownloading();
+                mCallback.finishDownloading(queryType);
             }
         }
 
