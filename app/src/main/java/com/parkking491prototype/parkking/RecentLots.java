@@ -1,7 +1,6 @@
 package com.parkking491prototype.parkking;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -68,10 +67,28 @@ public class RecentLots extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_recent_lots, container, false);
-        Button lot1 = (Button) v.findViewById(R.id.recentLotBtn1);
-        lot1.setOnClickListener(new View.OnClickListener() {
+        Button lot13 = (Button) v.findViewById(R.id.recentLotButtonL13);
+        Button g13 = (Button) v.findViewById(R.id.recentLotButtonG13);
+        Button g14 = (Button) v.findViewById(R.id.recentLotButtonG14);
+        lot13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+            }
+        });
+
+        g13.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+            }
+        });
+
+        g14.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
             }

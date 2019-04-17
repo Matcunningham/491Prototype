@@ -1,20 +1,25 @@
 package com.parkking491prototype.parkking;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -56,16 +61,22 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
     private GoogleMap gmap;
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     private CameraPosition mCameraPosition;
+    private String selectedLot = "";
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
-    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private final LatLng mDefaultLocation = new LatLng(33.781529, -118.113625);
     private static final int DEFAULT_ZOOM = 15;
+    private static final int SELECTED_ZOOM = 18;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
+
+    private final LatLng g13 = new LatLng(33.787364, -118.108638);
+    private final LatLng g14 = new LatLng(33.786050, -118.108593);
+    private final LatLng lot13 = new LatLng(33.787645, -118.115713);
 
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
@@ -74,13 +85,6 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
-
-    // Used for selecting the current place.
-    private static final int M_MAX_ENTRIES = 5;
-    private String[] mLikelyPlaceNames;
-    private String[] mLikelyPlaceAddresses;
-    private String[] mLikelyPlaceAttributions;
-    private LatLng[] mLikelyPlaceLatLngs;
 
     public FindLots() {
         // Required empty public constructor
@@ -136,14 +140,63 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
-        return view;
-    }
+        Button searchButton = (Button) view.findViewById(R.id.findLotsSearchButton);
+        final FloatingActionButton goToLot = (FloatingActionButton) view.findViewById(R.id.goToLotFAB);
+        final EditText searchText = (EditText) view.findViewById(R.id.findLotsSearchText);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String address = searchText.getText().toString();
+                switch (address) {
+                    case "g13":
+                        gmap.moveCamera(CameraUpdateFactory
+                                .newLatLngZoom(g13, SELECTED_ZOOM));
+                        selectedLot = "g13";
+                        break;
+                    case "g14":
+                        gmap.moveCamera(CameraUpdateFactory
+                                .newLatLngZoom(g14, SELECTED_ZOOM));
+                        selectedLot = "g14";
+                        break;
+                    case "lot 13":
+                        gmap.moveCamera(CameraUpdateFactory
+                                .newLatLngZoom(lot13, SELECTED_ZOOM));
+                        selectedLot = "lot 13";
+                        break;
+                    default:
+                        Context context = getActivity().getApplicationContext();
+                        CharSequence text = "Invalid Parking Spot";
+                        int duration = Toast.LENGTH_SHORT;
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                        selectedLot = "";
+                }
+
+                InputMethodManager inputManager = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+
+                if(selectedLot.isEmpty())
+                    goToLot.setVisibility(View.INVISIBLE);
+                else
+                    goToLot.setVisibility(View.VISIBLE);
+            }
+        });
+
+        goToLot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!selectedLot.isEmpty()) {
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                }
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -353,5 +406,4 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
             Log.e("Exception: %s", e.getMessage());
         }
     }
-
 }
