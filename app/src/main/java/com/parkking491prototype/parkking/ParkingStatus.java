@@ -23,26 +23,28 @@ public class ParkingStatus {
     }
 
     private void setTestDotCoords(){
-        for(int i = 1; i<8; i++){
-            StatusDot sd;
-            if (i<6) {
-                sd = new StatusDot(250, 100 + i * 140 );
-                statusDotList.add(sd);
-            }else if (i>=6 && i<11){
-                sd = new StatusDot(380, 100 + (i-5) * 140 );
-                statusDotList.add(sd);
-            }else if (i>=11 && i<16){
-                sd = new StatusDot(650, 100 + (i-10) * 140 );
-                statusDotList.add(sd);
-            }else{
-                sd = new StatusDot(780, 100 + (i-15) * 140 );
-                statusDotList.add(sd);
-            }
-            int min = 0;
-            int max = 1;
-//            sd.setStatus((min + (int)(Math.random() * ((max - min) + 1)))==1);
-            sd.setStatus(false);
-        }
+//        for(int i = 1; i<8; i++){
+//            StatusDot sd;
+//            if (i<6) {
+//                sd = new StatusDot(160, 60 + i * 50 );
+//                statusDotList.add(sd);
+//            }else if (i>=6 && i<11){
+//                sd = new StatusDot(240, 60 + (i-5) * 50 );
+//                statusDotList.add(sd);
+//            }else if (i>=11 && i<16){
+//                sd = new StatusDot(650, 100 + (i-10) * 80 );
+//                statusDotList.add(sd);
+//            }else{
+//                sd = new StatusDot(780, 100 + (i-15) * 80 );
+//                statusDotList.add(sd);
+//            }
+//            int min = 0;
+//            int max = 1;
+////            sd.setStatus((min + (int)(Math.random() * ((max - min) + 1)))==1);
+//            sd.setStatus(false);
+//        }
+        statusDotList.add(new StatusDot(169, 146 ));
+        statusDotList.add(new StatusDot(169, 236 ));
     }
 
     public ArrayList<StatusDot> getStatusDotList() {

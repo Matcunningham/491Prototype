@@ -171,6 +171,21 @@ public class PinchZoomPan extends View {
 //                statusDotList.get(i).setStatus((0 + (int)(Math.random() * ((1 - 0) + 1)))==1);
                     int x = statusDotList.get(i).getX();
                     int y = statusDotList.get(i).getY();
+
+                    //NORMALIZE  DOTS on pinchzoompan
+                    // coordorig/imagesizeposorig = coordscreen/screensize
+                    //I used proportions to normalize the coordinates on the image to the canvas on the screen.
+                    double tempX = x;
+                    double tempY = y;
+                    double canvasW = canvas.getWidth();
+                    //assume overlay is a square
+                    x = (int)(canvasW * (tempX/688));
+                    y = (int)(canvasW * (tempY/651));
+
+                    //END NORMALIZE
+
+
+
                     boolean status = statusDotList.get(i).getStatus();
 
                     if (status) {
