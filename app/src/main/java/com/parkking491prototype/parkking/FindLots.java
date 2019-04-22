@@ -7,8 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -191,7 +191,11 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 if(!selectedLot.isEmpty()) {
                         FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                        LotData ldfragment = LotData.newInstance("", "");
+                        Bundle args = new Bundle();
+                        args.putString("selectedLot", selectedLot);
+                        ldfragment.setArguments(args);
+                        fragmentManager.beginTransaction().replace(R.id.frame_container, ldfragment, "lotdata" ).commit();
                 }
             }
         });
