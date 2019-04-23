@@ -7,8 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -144,11 +144,6 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
         Button searchButton = (Button) view.findViewById(R.id.findLotsSearchButton);
         final FloatingActionButton goToLot = (FloatingActionButton) view.findViewById(R.id.goToLotFAB);
         final EditText searchText = (EditText) view.findViewById(R.id.findLotsSearchText);
-
-//        final Button recentg13 = (Button) view.findViewById(R.id.recentLotButtonG13);
-//        final Button recentg14 = (Button) view.findViewById(R.id.recentLotButtonG14);
-//        final Button recentL14 = (Button) view.findViewById(R.id.recentLotButtonL13);
-
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,6 +193,13 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
                 if(!mCallBack.getSelectedLot().isEmpty()) {
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                if(!selectedLot.isEmpty()) {
+                        FragmentManager fragmentManager = getFragmentManager();
+                        LotData ldfragment = LotData.newInstance("", "");
+                        Bundle args = new Bundle();
+                        args.putString("selectedLot", selectedLot);
+                        ldfragment.setArguments(args);
+                        fragmentManager.beginTransaction().replace(R.id.frame_container, ldfragment, "lotdata" ).commit();
                 }
             }
         });
