@@ -61,7 +61,8 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
     private GoogleMap gmap;
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     private CameraPosition mCameraPosition;
-    private String selectedLot = "";
+
+    DataCommunication mCallBack;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -143,6 +144,11 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
         Button searchButton = (Button) view.findViewById(R.id.findLotsSearchButton);
         final FloatingActionButton goToLot = (FloatingActionButton) view.findViewById(R.id.goToLotFAB);
         final EditText searchText = (EditText) view.findViewById(R.id.findLotsSearchText);
+
+//        final Button recentg13 = (Button) view.findViewById(R.id.recentLotButtonG13);
+//        final Button recentg14 = (Button) view.findViewById(R.id.recentLotButtonG14);
+//        final Button recentL14 = (Button) view.findViewById(R.id.recentLotButtonL13);
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,26 +157,26 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
                     case "g13":
                         gmap.moveCamera(CameraUpdateFactory
                                 .newLatLngZoom(g13, SELECTED_ZOOM));
-                        selectedLot = "g13";
+                        mCallBack.setSelectedLot("g13");
                         break;
                     case "g14":
                         gmap.moveCamera(CameraUpdateFactory
                                 .newLatLngZoom(g14, SELECTED_ZOOM));
-                        selectedLot = "g14";
+                        mCallBack.setSelectedLot("g14");
                         break;
                     case "lot 13":
                         gmap.moveCamera(CameraUpdateFactory
                                 .newLatLngZoom(lot13, SELECTED_ZOOM));
-                        selectedLot = "lot 13";
+                        mCallBack.setSelectedLot("lot 13");
                         break;
                     default:
                         Context context = getActivity().getApplicationContext();
-                        CharSequence text = "Invalid Parking Spot";
+                        CharSequence text = "Can't find parking lot";
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
-                        selectedLot = "";
+                        mCallBack.setSelectedLot("");
                 }
 
                 InputMethodManager inputManager = (InputMethodManager)
@@ -179,7 +185,7 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
                 inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
-                if(selectedLot.isEmpty())
+                if(mCallBack.getSelectedLot().isEmpty())
                     goToLot.setVisibility(View.INVISIBLE);
                 else
                     goToLot.setVisibility(View.VISIBLE);
@@ -189,9 +195,9 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
         goToLot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!selectedLot.isEmpty()) {
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                if(!mCallBack.getSelectedLot().isEmpty()) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
                 }
             }
         });
@@ -202,6 +208,12 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        try {
+            mCallBack = (DataCommunication) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement DataCommunication");
+        }
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

@@ -15,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RecentLots.OnFragmentInteractionListener, FindLots.OnFragmentInteractionListener, Settings.OnFragmentInteractionListener, Dashboard.OnFragmentInteractionListener, LotData.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, RecentLots.OnFragmentInteractionListener, FindLots.OnFragmentInteractionListener, Settings.OnFragmentInteractionListener, Dashboard.OnFragmentInteractionListener, LotData.OnFragmentInteractionListener, DataCommunication {
+
+    private String selectedLot = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -83,11 +84,8 @@ public class MainActivity extends AppCompatActivity
             fragment = new Dashboard();
         } else if (id == R.id.nav_recent_lots) {
             fragment = new RecentLots();
-
         } else if (id == R.id.nav_find_lots) {
             fragment = new FindLots();
-            //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-
         } else if (id == R.id.nav_settings) {
             fragment = new Settings();
         }
@@ -101,6 +99,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public String getSelectedLot() {
+        return selectedLot;
+    }
+
+    @Override
+    public void setSelectedLot(String s) {
+        selectedLot = s;
     }
 
     public void onFragmentInteraction(Uri uri) {

@@ -29,6 +29,8 @@ public class RecentLots extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    DataCommunication mCallBack;
+
     private OnFragmentInteractionListener mListener;
 
     public RecentLots() {
@@ -70,6 +72,22 @@ public class RecentLots extends Fragment {
         Button lot13 = (Button) v.findViewById(R.id.recentLotButtonL13);
         Button g13 = (Button) v.findViewById(R.id.recentLotButtonG13);
         Button g14 = (Button) v.findViewById(R.id.recentLotButtonG14);
+
+        String selectedLot = mCallBack.getSelectedLot();
+        switch (selectedLot) {
+            case "lot 13":
+                lot13.setVisibility(View.VISIBLE);
+                break;
+            case "g13":
+                g13.setVisibility(View.VISIBLE);
+                break;
+            case "g14":
+                g14.setVisibility(View.VISIBLE);
+                break;
+            default:
+                System.out.println();
+        }
+
         lot13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,6 +118,12 @@ public class RecentLots extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            mCallBack = (DataCommunication) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement DataCommunication");
+        }
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
