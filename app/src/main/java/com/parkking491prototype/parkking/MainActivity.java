@@ -1,6 +1,5 @@
 package com.parkking491prototype.parkking;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RecentLots.OnFragmentInteractionListener, FindLots.OnFragmentInteractionListener, Settings.OnFragmentInteractionListener, Dashboard.OnFragmentInteractionListener, LotData.OnFragmentInteractionListener, DataCommunication {
+        implements NavigationView.OnNavigationItemSelectedListener, RecentLots.OnFragmentInteractionListener, FindLots.OnFragmentInteractionListener,
+        Settings.OnFragmentInteractionListener, Dashboard.OnFragmentInteractionListener, LotData.OnFragmentInteractionListener, ListLots.OnFragmentInteractionListener, DataCommunication {
 
     private String selectedLot = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
         if(savedInstanceState == null) {
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, new Dashboard()).commit();
+            fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new Dashboard()).commit();
 
         }
     }
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -82,17 +84,21 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_dashboard) {
             fragment = new Dashboard();
+
         } else if (id == R.id.nav_recent_lots) {
             fragment = new RecentLots();
+
         } else if (id == R.id.nav_find_lots) {
             fragment = new FindLots();
+            //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+
         } else if (id == R.id.nav_settings) {
             fragment = new Settings();
         }
 
         if(fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, fragment).commit();
 
         }
 
@@ -100,6 +106,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public String getSelectedLot() {
@@ -111,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         selectedLot = s;
     }
 
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri uri){
 
     }
 }

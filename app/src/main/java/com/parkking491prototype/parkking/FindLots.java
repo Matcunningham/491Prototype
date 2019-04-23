@@ -191,12 +191,12 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 if(!mCallBack.getSelectedLot().isEmpty()) {
                     FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
                     LotData ldfragment = LotData.newInstance("", "");
                     Bundle args = new Bundle();
                     args.putString("selectedLot", mCallBack.getSelectedLot());
                     ldfragment.setArguments(args);
-                    fragmentManager.beginTransaction().replace(R.id.frame_container, ldfragment, "lotdata" ).commit();
+                    fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, ldfragment, "lotdata" ).commit();
                 }
             }
         });

@@ -11,4 +11,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lot_13">Lot 13</string>
+    <string name="recent_parking_lots">Recent Parking Lots</string>
+    <string name="g13">G13</string>
+    <string name="g14">g14</string>
+    <string name="settings">Settings</string>
+    <string name="list_parking_lots">List Parking Lots</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="list_parking_lots2">list parking lots</string>
+    <string name="recent_parking_lots2">recent parking lots</string>
+    <string name="find_parking_lots">find parking lots</string>
+    <string name="settings2">settings</string>
+    <string name="app_logo">app logo</string>
 </resources>

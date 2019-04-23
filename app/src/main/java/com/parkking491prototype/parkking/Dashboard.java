@@ -1,5 +1,6 @@
 package com.parkking491prototype.parkking;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
@@ -64,7 +66,48 @@ public class Dashboard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+//        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        Button listLots = (Button) v.findViewById(R.id.listLotsButton);
+        Button recentLots = (Button) v.findViewById(R.id.recentLotsButton);
+        Button searchLots = (Button) v.findViewById(R.id.findLotsButton);
+        Button settings = (Button) v.findViewById(R.id.settingsButton);
+
+        listLots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new ListLots()).commit();
+            }
+        });
+
+        recentLots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new RecentLots()).commit();
+            }
+        });
+
+        searchLots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new FindLots()).commit();
+            }
+        });
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new Settings()).commit();
+            }
+        });
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

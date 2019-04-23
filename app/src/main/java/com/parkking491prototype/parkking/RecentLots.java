@@ -92,7 +92,7 @@ public class RecentLots extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
         });
 
@@ -100,7 +100,7 @@ public class RecentLots extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
         });
 
@@ -108,7 +108,7 @@ public class RecentLots extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
         });
 
