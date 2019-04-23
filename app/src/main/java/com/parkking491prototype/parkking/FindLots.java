@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.app.Fragment;
@@ -32,10 +33,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
-import afu.org.checkerframework.checker.nullness.qual.NonNull;
-
 import static com.android.volley.VolleyLog.TAG;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -193,13 +192,11 @@ public class FindLots extends Fragment implements OnMapReadyCallback {
                 if(!mCallBack.getSelectedLot().isEmpty()) {
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.frame_container, new LotData()).commit();
-                if(!selectedLot.isEmpty()) {
-                        FragmentManager fragmentManager = getFragmentManager();
-                        LotData ldfragment = LotData.newInstance("", "");
-                        Bundle args = new Bundle();
-                        args.putString("selectedLot", selectedLot);
-                        ldfragment.setArguments(args);
-                        fragmentManager.beginTransaction().replace(R.id.frame_container, ldfragment, "lotdata" ).commit();
+                    LotData ldfragment = LotData.newInstance("", "");
+                    Bundle args = new Bundle();
+                    args.putString("selectedLot", mCallBack.getSelectedLot());
+                    ldfragment.setArguments(args);
+                    fragmentManager.beginTransaction().replace(R.id.frame_container, ldfragment, "lotdata" ).commit();
                 }
             }
         });
