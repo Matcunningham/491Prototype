@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/side_nav_bar"
+    android:background="#232425"
     tools:context=".FindLots">
 
     <android.support.constraint.ConstraintLayout
@@ -22,8 +22,9 @@
             android:ems="10"
             android:hint="Enter Lot Name"
             android:inputType="textPostalAddress"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
+            android:textColor="#B4AB8E"
+            android:textColorHint="#B4AB8E"
+            android:textColorLink="#B4AB8E"
             app:layout_constraintEnd_toStartOf="@+id/findLotsSearchButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,9 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
-            android:background="#347970"
+            android:background="#3F4345"
             android:text="Search"
-            android:textColor="#EDEFF1"
+            android:textColor="#B4AB8E"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

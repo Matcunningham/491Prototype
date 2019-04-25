@@ -16,9 +16,12 @@ import java.util.Map;
 
 
 public class ParkingStatus {
+
     private Map<String, StatusDot> statusDots;
     private int numOfOpenSpots;
     private boolean canvasNormalizedFlag;
+
+
     public ParkingStatus(){
         statusDots=  new HashMap<String, StatusDot>();
         canvasNormalizedFlag = false;

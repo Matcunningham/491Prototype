@@ -94,7 +94,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_settings) {
             fragment = new Settings();
+
+        } else if (id == R.id.nav_list_lots) {
+            fragment = new ListLots();
         }
+
 
         if(fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();

@@ -18,6 +18,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCARsLSPBUQXMWLHxLFCN24ix3bA_L9CBI"/>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
         <activity
             android:name=".SplashScreen"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">

@@ -9,9 +9,13 @@
             android:icon="@drawable/ic_menu_send"
             android:title="Dashboard" />
         <item
+            android:id="@+id/nav_list_lots"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/list_parking_lots" />
+        <item
             android:id="@+id/nav_recent_lots"
             android:icon="@drawable/ic_menu_send"
-            android:title="Recent Parking Lots" />
+            android:title="@string/recent_parking_lots" />
         <item
             android:id="@+id/nav_find_lots"
             android:icon="@drawable/ic_menu_send"
