@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -252,14 +254,11 @@ public class LotData extends Fragment implements DownloadCallback<String> {
 
     @Override
     public void updateFromDownload(QueryType qType, String result) {
-        // For testing purposes
-        //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         try {
 //            JSONArray jArray = new JSONArray(result);
 //            JSONObject jObject = jArray.getJSONObject(0);
 //            String data = jObject.getString("data");
 //            System.out.println("data: " + data);
-
             if(qType != null && result != null) {
                 if (qType == STATUS) {
                     JSONArray jArray1 = new JSONArray(result);
@@ -303,6 +302,12 @@ public class LotData extends Fragment implements DownloadCallback<String> {
 
 
         } catch (JSONException e) {
+            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
         }
     }

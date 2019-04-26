@@ -135,7 +135,7 @@ public class NetworkFragment extends Fragment {
         }
 
         /**
-         * Wrapper class that serves as a union of a result value and an exception. When the download
+         * Wrapper class that serves as a union of a result value and an exception. When the download4
          * task has completed, either the result value or exception can be a non-null value.
          * This allows you to pass exceptions to the UI thread that were thrown during doInBackground().
          */
@@ -197,6 +197,7 @@ public class NetworkFragment extends Fragment {
         protected void onPostExecute(Result result) {
             if (result != null && mCallback != null) {
                 if (result.mException != null) {
+                    System.out.println(result.mException.getMessage());
                     mCallback.updateFromDownload(queryType ,result.mException.getMessage());
                 }
                 if (result.mResultValue != null) {
@@ -242,8 +243,9 @@ public class NetworkFragment extends Fragment {
                 connection.connect();
                 publishProgress(DownloadCallback.Progress.CONNECT_SUCCESS);
                 int responseCode = connection.getResponseCode();
-                if (responseCode != HttpURLConnection.HTTP_ACCEPTED) {
-                    throw new IOException("HTTP error code: " + responseCode);
+                if (responseCode != HttpURLConnection.HTTP_ACCEPTED ) {
+                    if(responseCode!= HttpURLConnection.HTTP_OK)
+                        throw new IOException("HTTP error code: " + responseCode);
                 }
                 // Retrieve the response body as an InputStream.
                 int contentLength = connection.getContentLength();
