@@ -51,11 +51,10 @@ public class LotData extends Fragment implements DownloadCallback<String> {
     private static final String OVERLAY_COORDS_URL = BASE_URL + "api/overlaycoordinates?parkinglot_ID=";
     private static final String STATUS_URL = BASE_URL + "api/status?parkinglot_ID=";
 
-
+    DataCommunication mCallBack;
 
     //test purposes
-    private static final String TEST_CAMERA_NAME = "667";
-
+    private static String CAMERA_NAME = "";
 
     private NetworkFragment netFrag = null;
     private NetworkFragment netFrag2 = null;
@@ -71,7 +70,6 @@ public class LotData extends Fragment implements DownloadCallback<String> {
 
 
     private ProgressBar progressBar;
-
 
 
 
@@ -126,6 +124,23 @@ public class LotData extends Fragment implements DownloadCallback<String> {
 
 //        return v;
 
+
+        String selectedLot = mCallBack.getSelectedLot();
+        switch (selectedLot) {
+            case "g13":
+                CAMERA_NAME = "g13";
+                break;
+            case "g14":
+                CAMERA_NAME = "g14";
+                break;
+            case "lot 13":
+                CAMERA_NAME = "lot13";
+                break;
+            default:
+                CAMERA_NAME = "model";
+                break;
+        }
+
         progressBar = v.findViewById(R.id.progressBar2);
 
 
@@ -138,16 +153,16 @@ public class LotData extends Fragment implements DownloadCallback<String> {
 
 
         //grab overlay and update
-        netFrag.setUrlStringAndQueryType(OVERLAYMAP ,OVERLAY_URL + TEST_CAMERA_NAME);
+        netFrag.setUrlStringAndQueryType(OVERLAYMAP ,OVERLAY_URL + CAMERA_NAME);
         startOverlayMapDownload();
 
         //grab coords and update
-        netFrag2.setUrlStringAndQueryType(OVERLAYCOORDS ,OVERLAY_COORDS_URL + TEST_CAMERA_NAME);
+        netFrag2.setUrlStringAndQueryType(OVERLAYCOORDS ,OVERLAY_COORDS_URL + CAMERA_NAME);
         startOverlayCoordDownload();
 
 
         //grab status
-        netFragStatus.setUrlStringAndQueryType(STATUS, STATUS_URL + TEST_CAMERA_NAME);
+        netFragStatus.setUrlStringAndQueryType(STATUS, STATUS_URL + CAMERA_NAME);
         startFragDownload();
         pinchZoomPan = (PinchZoomPan) v.findViewById(R.id.ivImage);
         pinchZoomPan.invalidate();
@@ -164,7 +179,7 @@ public class LotData extends Fragment implements DownloadCallback<String> {
             public void run() {
                 try {//please dont cringe at this
                     // do updates for imageview
-                    netFragStatus.setUrlStringAndQueryType(STATUS, STATUS_URL + TEST_CAMERA_NAME);
+                    netFragStatus.setUrlStringAndQueryType(STATUS, STATUS_URL + CAMERA_NAME);
                     startFragDownload();
                     pinchZoomPan = (PinchZoomPan) v.findViewById(R.id.ivImage);
                     pinchZoomPan.invalidate();
@@ -194,6 +209,11 @@ public class LotData extends Fragment implements DownloadCallback<String> {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            mCallBack = (DataCommunication) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement DataCommunication");
+        }
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {

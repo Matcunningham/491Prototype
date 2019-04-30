@@ -31,6 +31,8 @@ public class ListLots extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    DataCommunication mCallBack;
+
     public ListLots() {
         // Required empty public constructor
     }
@@ -74,6 +76,7 @@ public class ListLots extends Fragment {
         lot13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mCallBack.setSelectedLot("lot 13");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
@@ -82,6 +85,7 @@ public class ListLots extends Fragment {
         g13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCallBack.setSelectedLot("g13");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
@@ -90,6 +94,7 @@ public class ListLots extends Fragment {
         g14.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCallBack.setSelectedLot("g14");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
@@ -101,6 +106,11 @@ public class ListLots extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            mCallBack = (DataCommunication) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement DataCommunication");
+        }
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
