@@ -136,6 +136,9 @@ public class LotData extends Fragment implements DownloadCallback<String> {
             case "lot 13":
                 CAMERA_NAME = "lot13";
                 break;
+            case "model":
+                CAMERA_NAME = "model";
+                break;
             default:
                 CAMERA_NAME = "model";
                 break;

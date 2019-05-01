@@ -74,5 +74,19 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/listLotsButtonG13"
             app:layout_constraintTop_toBottomOf="@+id/listLotsButtonG13" />
+
+        <Button
+            android:id="@+id/listLotsButtonModel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="#2E3032"
+            android:fontFamily="@font/aldrich"
+            android:text="Model"
+            android:textColor="#B4AB8E"
+            app:layout_constraintEnd_toEndOf="@+id/listLotsButtonG14"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/listLotsButtonG14"
+            app:layout_constraintTop_toBottomOf="@+id/listLotsButtonG14" />
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

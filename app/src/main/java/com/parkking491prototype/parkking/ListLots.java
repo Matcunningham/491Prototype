@@ -72,6 +72,7 @@ public class ListLots extends Fragment {
         Button lot13 = (Button) v.findViewById(R.id.listLotsButtonL13);
         Button g13 = (Button) v.findViewById(R.id.listLotsButtonG13);
         Button g14 = (Button) v.findViewById(R.id.listLotsButtonG14);
+        Button model = (Button) v.findViewById(R.id.listLotsButtonModel);
 
         lot13.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +96,15 @@ public class ListLots extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallBack.setSelectedLot("g14");
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
+            }
+        });
+
+        model.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallBack.setSelectedLot("model");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
