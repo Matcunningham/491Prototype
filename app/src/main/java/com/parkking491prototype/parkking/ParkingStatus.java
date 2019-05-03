@@ -20,11 +20,12 @@ public class ParkingStatus {
     private Map<String, StatusDot> statusDots;
     private int numOfOpenSpots;
     private boolean canvasNormalizedFlag;
-
+    private boolean updatedStatusFlag;
 
     public ParkingStatus(){
         statusDots=  new HashMap<String, StatusDot>();
         canvasNormalizedFlag = false;
+        updatedStatusFlag = false;
     }
 
 //    private void setTestDotCoords(){
@@ -66,6 +67,7 @@ public class ParkingStatus {
                 }
             }catch(JSONException e){
                 e.printStackTrace();
+                statusDots.clear();
             }
         }
     }
@@ -90,7 +92,7 @@ public class ParkingStatus {
 
     public void updateStatus(JSONArray statusArray){
         numOfOpenSpots = 0;
-
+        updatedStatusFlag = true;
         try {
             for (int i = 0; i < statusArray.length(); i++) {
                 JSONObject statusObject = statusArray.getJSONObject(i);
@@ -103,9 +105,9 @@ public class ParkingStatus {
                     numOfOpenSpots++;
                 }
             }
-        } catch (
-                JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
+            updatedStatusFlag= false;
         }
 
 
@@ -123,4 +125,7 @@ public class ParkingStatus {
     public boolean isCanvasNormalizedFlag(){
         return canvasNormalizedFlag;
     }
+
+    public boolean isUpdatedStatusFlag(){return updatedStatusFlag;}
+
 }

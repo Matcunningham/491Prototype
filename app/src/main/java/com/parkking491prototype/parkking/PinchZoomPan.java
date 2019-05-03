@@ -44,6 +44,7 @@ public class PinchZoomPan extends View {
 
     private ParkingStatus parkingStatus;
 
+
     private int bitmapActualWidth =0;
     private int bitmapActualHeight = 0;
 
@@ -193,10 +194,14 @@ public class PinchZoomPan extends View {
                     }
 
                     boolean status = statusDot.getStatus();
-                    if (status) {
-                        paint.setARGB(255, 0, 255, 0);
-                    } else {
-                        paint.setARGB(255, 255, 0, 0);
+                    if(parkingStatus.isUpdatedStatusFlag()) {
+                        if (status) {
+                            paint.setARGB(255, 0, 255, 0);
+                        } else {
+                            paint.setARGB(255, 255, 0, 0);
+                        }
+                    }else{
+                        paint.setARGB(255, 150, 150, 150);
                     }
                     canvas.drawCircle(statusDot.getCanvasX(), statusDot.getCanvasY(), 30, paint);
                 }

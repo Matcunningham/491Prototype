@@ -63,6 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="100dp"
             android:layout_marginBottom="20dp"
+            android:background="#36FFFFFF"
+            android:gravity="center"
             android:textColor="@color/quantum_white_text"
             android:textSize="30sp"
             app:fontFamily="sans-serif"

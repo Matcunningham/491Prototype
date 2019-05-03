@@ -49,7 +49,7 @@ public class LotData extends Fragment implements DownloadCallback<String> {
     private static final String BASE_URL = "http://54.186.186.248:3000/";
     private static final String OVERLAY_URL = BASE_URL + "api/overlayimage?parkinglot_ID=";
     private static final String OVERLAY_COORDS_URL = BASE_URL + "api/overlaycoordinates?parkinglot_ID=";
-    private static final String STATUS_URL = BASE_URL + "api/status?parkinglot_ID=";
+    private static final String STATUS_URL = BASE_URL + "api/status/";
 
     DataCommunication mCallBack;
 
@@ -67,7 +67,8 @@ public class LotData extends Fragment implements DownloadCallback<String> {
     private Button getImage;
     protected PinchZoomPan pinchZoomPan;
     private final ParkingStatus parkingStatus = new ParkingStatus();
-
+    private boolean loadParkingDataSuccessful=true;
+    private  TextView parkingStatusTextView;
 
     private ProgressBar progressBar;
 
@@ -128,10 +129,10 @@ public class LotData extends Fragment implements DownloadCallback<String> {
         String selectedLot = mCallBack.getSelectedLot();
         switch (selectedLot) {
             case "g13":
-                CAMERA_NAME = "g13";
+                CAMERA_NAME = "G13";
                 break;
             case "g14":
-                CAMERA_NAME = "g14";
+                CAMERA_NAME = "G14";
                 break;
             case "lot 13":
                 CAMERA_NAME = "lot13";
@@ -169,8 +170,8 @@ public class LotData extends Fragment implements DownloadCallback<String> {
         startFragDownload();
         pinchZoomPan = (PinchZoomPan) v.findViewById(R.id.ivImage);
         pinchZoomPan.invalidate();
-        TextView parkingStatusTextView = (TextView) v.findViewById(R.id.parkingStatusTextView);
-        parkingStatusTextView.setText("Open Spots:" + parkingStatus.getNumOfOpenSpots());
+        parkingStatusTextView = (TextView) v.findViewById(R.id.parkingStatusTextView);
+        parkingStatusTextView.setText("Open Spots: " + parkingStatus.getNumOfOpenSpots());
         parkingStatusTextView.invalidate();
 
 
@@ -182,15 +183,17 @@ public class LotData extends Fragment implements DownloadCallback<String> {
             public void run() {
                 try {//please dont cringe at this
                     // do updates for imageview
-                    netFragStatus.setUrlStringAndQueryType(STATUS, STATUS_URL + CAMERA_NAME);
-                    startFragDownload();
-                    pinchZoomPan = (PinchZoomPan) v.findViewById(R.id.ivImage);
-                    pinchZoomPan.invalidate();
-                    TextView parkingStatusTextView = (TextView) v.findViewById(R.id.parkingStatusTextView);
-                    parkingStatusTextView.setText("Open Spots:" + parkingStatus.getNumOfOpenSpots());
-                    parkingStatusTextView.invalidate();
-                    System.out.println("Refreshed!");
-                    refreshHandler.postDelayed(this, 5 * 1000);
+                    if(loadParkingDataSuccessful) {
+                        netFragStatus.setUrlStringAndQueryType(STATUS, STATUS_URL + CAMERA_NAME);
+                        startFragDownload();
+                        pinchZoomPan = (PinchZoomPan) v.findViewById(R.id.ivImage);
+                        pinchZoomPan.invalidate();
+                        TextView parkingStatusTextView = (TextView) v.findViewById(R.id.parkingStatusTextView);
+                        parkingStatusTextView.setText("Open Spots:" + parkingStatus.getNumOfOpenSpots());
+                        parkingStatusTextView.invalidate();
+                        System.out.println("Refreshed!");
+                        refreshHandler.postDelayed(this, 5 * 1000);
+                    }
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -278,24 +281,13 @@ public class LotData extends Fragment implements DownloadCallback<String> {
     @Override
     public void updateFromDownload(QueryType qType, String result) {
         try {
-//            JSONArray jArray = new JSONArray(result);
-//            JSONObject jObject = jArray.getJSONObject(0);
-//            String data = jObject.getString("data");
-//            System.out.println("data: " + data);
             if(qType != null && result != null) {
                 if (qType == STATUS) {
-                    JSONArray jArray1 = new JSONArray(result);
-                    JSONObject jObject1 = jArray1.getJSONObject(0);
+
+                    JSONObject jObject1 = new JSONObject(result);
                     String statusString = jObject1.getString("status");
-//                    JSONArray statusObject = jObject1.getJSONArray("status");
                     JSONArray statusArray = new JSONArray(statusString);
-
-//                    System.out.println("TEST: " + statusString);
-//                    final int STATUS_INDEX= 2;
-//                    JSONArray statusArray = jArray1.getJSONArray(STATUS_INDEX);
                     parkingStatus.updateStatus(statusArray);
-
-//                    System.out.println(statusArray.getJSONObject(0).getString("confidence"));
                 } else {
                     switch (qType) {
                         case OVERLAYMAP:
@@ -310,6 +302,7 @@ public class LotData extends Fragment implements DownloadCallback<String> {
 
                         case OVERLAYCOORDS:
                             JSONArray jArray2 = new JSONArray(result);
+                            //
                             JSONObject jObject2= jArray2.getJSONObject(0);
                             String data2 = jObject2.getString("data");
                             System.out.println("Coord data: " + data2);
@@ -325,13 +318,15 @@ public class LotData extends Fragment implements DownloadCallback<String> {
 
 
         } catch (JSONException e) {
+            //if fails to read json, display error.
+            loadParkingDataSuccessful = false;
             Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
             e.printStackTrace();
+            parkingStatusTextView.setText("Unable to load data.");
+            progressBar.setVisibility(View.INVISIBLE);
+            parkingStatusTextView.invalidate();
+
+
         }
     }
 
