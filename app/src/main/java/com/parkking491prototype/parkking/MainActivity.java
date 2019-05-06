@@ -15,7 +15,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RecentLots.OnFragmentInteractionListener, FindLots.OnFragmentInteractionListener,
-        Settings.OnFragmentInteractionListener, Dashboard.OnFragmentInteractionListener, LotData.OnFragmentInteractionListener, ListLots.OnFragmentInteractionListener, DataCommunication {
+        Settings.OnFragmentInteractionListener, Dashboard.OnFragmentInteractionListener, LotData.OnFragmentInteractionListener, ListLots.OnFragmentInteractionListener,
+        AboutParkKing.OnFragmentInteractionListener, DataCommunication {
 
     private String selectedLot = "";
 

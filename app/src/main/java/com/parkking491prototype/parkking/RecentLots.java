@@ -72,6 +72,8 @@ public class RecentLots extends Fragment {
         Button lot13 = (Button) v.findViewById(R.id.recentLotButtonL13);
         Button g13 = (Button) v.findViewById(R.id.recentLotButtonG13);
         Button g14 = (Button) v.findViewById(R.id.recentLotButtonG14);
+        Button model = (Button) v.findViewById(R.id.listLotsButtonModel);
+
 
         String selectedLot = mCallBack.getSelectedLot();
         switch (selectedLot) {
@@ -88,9 +90,11 @@ public class RecentLots extends Fragment {
                 System.out.println();
         }
 
+
         lot13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mCallBack.setSelectedLot("lot 13");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
@@ -99,6 +103,7 @@ public class RecentLots extends Fragment {
         g13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCallBack.setSelectedLot("g13");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
@@ -107,10 +112,20 @@ public class RecentLots extends Fragment {
         g14.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCallBack.setSelectedLot("g14");
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
             }
         });
+
+//        model.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mCallBack.setSelectedLot("model");
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.mainContentFrameContainer, new LotData()).commit();
+//            }
+//        });
 
         return v;
     }

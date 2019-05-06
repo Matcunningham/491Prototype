@@ -25,4 +25,15 @@
     <string name="app_logo">app logo</string>
     <string name="g_13">g 13</string>
     <string name="g_14">g 14</string>
+    <string name="about_park_king">
+        \t As students of California State University, Long Beach, many of us begin our school days with dread as we struggle to find parking. It is always frustrating
+        to circle around the parking lots hoping you find a parking spot and won’t be late to class. \n\n
+
+        \t The Park King app helps all drivers easily find and navigate their way to open parking spots in a parking lot that is registered with our system. Park King uses
+        smart cameras that utilize machine learning and computer vision algorithms to detect whether or not a parking spot is open or occupied.\n\n
+
+        \t The Park King system is able to view how
+        many and which specific parking spots are open by using a cloud server that receives data from our smart cameras and processes it and then sends it to the
+        smartphone app.\n\n</string>
 </resources>
+
