@@ -195,7 +195,7 @@ public class PinchZoomPan extends View {
 
                     boolean status = statusDot.getStatus();
                     if(parkingStatus.isUpdatedStatusFlag()) {
-                        if (status) {
+                        if (!status) {
                             paint.setARGB(255, 0, 255, 0);
                         } else {
                             paint.setARGB(255, 255, 0, 0);
