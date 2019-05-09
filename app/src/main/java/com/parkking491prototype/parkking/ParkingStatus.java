@@ -99,9 +99,9 @@ public class ParkingStatus {
                 Double confidence = statusObject.getDouble("confidence");
                 String id = statusObject.getString("id");
                 if(statusDots.containsKey(id)) {
-                    statusDots.get(id).setStatus(confidence != 0);
+                    statusDots.get(id).setStatus(confidence == 0);
                 }
-                if (confidence!=0) {
+                if (confidence==0) {
                     numOfOpenSpots++;
                 }
             }
